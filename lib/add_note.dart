@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:notes_application/api_service.dart';
+import 'package:notes_application/notesModel.dart';
 
 class AddNote extends StatefulWidget {
   const AddNote({super.key});
 
   @override
   State<AddNote> createState() => _AddNoteState();
-
-  Future<void> postNote() async {
-    final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/notes/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: <String, dynamic>{
-          'tag': 'Flutter HTTP CRUD',
-          'note': 'test api through Flutter',
-          'id': 1,
-        });
-  }
 }
 
 class _AddNoteState extends State<AddNote> {
+  /* @override
+  //! this method success to post data to the server
+  Future<void> postData() async {
+    final url = Uri.parse('http://127.0.0.1:8000/api/notes/');
+    final response = await http.post(url, body: {
+      
+      'tag': 'Flutter HTTP CRUD',
+      'note': 'test api through Flutter',
+      'username': '2',
+      'created_at': '2022-01-01T00:00:00Z',
+    });
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      print('success');
+    } else {
+      throw Exception(
+          'Failed to create data: ' + response.statusCode.toString());
+    }
+  } */
+
+  final textController = TextEditingController();
   @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -55,13 +68,15 @@ class _AddNoteState extends State<AddNote> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   )),
               const TextField(
+                controller: textController,
                 decoration: InputDecoration(
-                  hintText: 'Title',
+                  hintText: 'write your note title',
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightBlueAccent),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color: Colors.lightBlueAccent),
                   ),
                 ),
               ),
@@ -77,8 +92,9 @@ class _AddNoteState extends State<AddNote> {
                   )),
               const TextField(
                 decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(),
-                  hintText: 'Note',
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.lightBlueAccent)),
+                  hintText: 'write your note',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     borderSide: BorderSide(color: Colors.lightBlueAccent),
@@ -88,6 +104,11 @@ class _AddNoteState extends State<AddNote> {
               const SizedBox(
                 height: 10,
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    
+                  },
+                  child: const Text('create note'))
             ],
           ),
         ));

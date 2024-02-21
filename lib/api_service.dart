@@ -27,7 +27,7 @@ class ApiService {
     }
   }
 
-  Future<void> postNote() async {
+  Future<void> postNote(String tag, String note) async {
     final response =
         await http.post(Uri.parse('http://127.0.0.1:8000/api/notes/'),
             headers: <String, String>{
