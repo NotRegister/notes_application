@@ -34,10 +34,12 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: UpdateNote()))
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: (){
+          
         },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: _notesModel == null || _notesModel!.isEmpty
           ? const Center(
@@ -46,65 +48,67 @@ class _HomePageState extends State<HomePage> {
           : ListView.builder(
               itemCount: _notesModel!.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _notesModel![index].tag,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(_notesModel![index].note),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              ButtonBar(children: [
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.amber,
-                                  ),
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _notesModel![index].tag,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(_notesModel![index].note),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    var apiService = ApiService();
-                                    apiService
-                                        .deleteNote(_notesModel![index].id);
-                                    setState(() {
-                                      // _getData();
-                                      // _notesModel!.removeAt(index);
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                                ButtonBar(children: [
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.amber,
+                                    ),
                                   ),
-                                ),
-                              ])
-                            ],
-                          ),
-                        )
-                      ],
+                                  TextButton(
+                                    onPressed: () async {
+                                      var apiService = ApiService();
+                                      apiService
+                                          .deleteNote(_notesModel![index].id);
+                                      setState(() {
+                                        // _getData();f
+                                        _notesModel!.removeAt(index);
+                                      });
+                                        // print('setstate error');
+                                    },
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ])
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
               }),
-            ,
     );
   }
 }
