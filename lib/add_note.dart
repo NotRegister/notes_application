@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:notes_application/api_service.dart';
 import 'package:notes_application/notesModel.dart';
@@ -30,12 +31,17 @@ class _AddNoteState extends State<AddNote> {
     }
   } */
 
-  final textController = TextEditingController();
+  final titleController = TextEditingController();
+  final noteController = TextEditingController();
+
   @override
   void dispose() {
-    textController.dispose();
+    titleController.dispose();
+    noteController.dispose();
     super.dispose();
   }
+
+  String todayDate = DateFormat('yMd').format(DateTime.now());
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +73,9 @@ class _AddNoteState extends State<AddNote> {
                     'Notes Title',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   )),
-              const TextField(
-                controller: textController,
-                decoration: InputDecoration(
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
                   hintText: 'write your note title',
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightBlueAccent),
@@ -90,8 +96,9 @@ class _AddNoteState extends State<AddNote> {
                     'Notes Content',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   )),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: noteController,
+                decoration: const InputDecoration(
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.lightBlueAccent)),
                   hintText: 'write your note',
@@ -104,9 +111,22 @@ class _AddNoteState extends State<AddNote> {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    
+              TextButton(
+                  onPressed: () async {
+                    final url = Uri.parse('http://127.0.0.1:8000/api/notes/');
+                    final response = await http.post(url, body: {
+                      'tag': titleController.text,
+                      'note': noteController.text,
+                      'username': '1',
+                      'created_at': todayDate,
+                    });
+                    if (response.statusCode == 201 ||
+                        response.statusCode == 200) {
+                      Navigator.pop(context);
+                    } else {
+                      throw Exception('Failed to create data: ' +
+                          response.statusCode.toString());
+                    }
                   },
                   child: const Text('create note'))
             ],
