@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes_application/add_note.dart';
-import 'package:notes_application/home.dart';
-import 'package:notes_application/new/homepage.dart';
+import 'package:notes_application/screens/home.dart';
+import 'package:notes_application/screens/login.dart';
 
 void main(){
   runApp(const MyApp());
@@ -18,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomePage(),
+      home: Login(),
     );
   }
 }

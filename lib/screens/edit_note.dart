@@ -1,48 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'package:notes_application/api_service.dart';
-import 'package:notes_application/notesModel.dart';
 
-class AddNote extends StatefulWidget {
-  const AddNote({super.key});
+class EditNote extends StatefulWidget {
+  const EditNote({super.key});
 
   @override
-  State<AddNote> createState() => _AddNoteState();
+  State<EditNote> createState() => _EditNoteState();
 }
 
-class _AddNoteState extends State<AddNote> {
-  /* @override
-  //! this method success to post data to the server
-  Future<void> postData() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/notes/');
-    final response = await http.post(url, body: {
-      
-      'tag': 'Flutter HTTP CRUD',
-      'note': 'test api through Flutter',
-      'username': '2',
-      'created_at': '2022-01-01T00:00:00Z',
-    });
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      print('success');
-    } else {
-      throw Exception(
-          'Failed to create data: ' + response.statusCode.toString());
-    }
-  } */
+class _EditNoteState extends State<EditNote> {
+  
 
-  final titleController = TextEditingController();
-  final noteController = TextEditingController();
 
   @override
-  void dispose() {
-    titleController.dispose();
-    noteController.dispose();
-    super.dispose();
-  }
-
-  String todayDate = DateFormat('yMd').format(DateTime.now());
-
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -62,7 +31,7 @@ class _AddNoteState extends State<AddNote> {
           backgroundColor: Colors.lightBlueAccent,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -75,15 +44,18 @@ class _AddNoteState extends State<AddNote> {
                   )),
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
                   hintText: 'write your note title',
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.lightBlueAccent),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.lightBlueAccent,
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: Colors.lightBlueAccent),
-                  ),
+                  fillColor: Colors.grey,
                 ),
               ),
               const SizedBox(
@@ -98,14 +70,18 @@ class _AddNoteState extends State<AddNote> {
                   )),
               TextField(
                 controller: noteController,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.lightBlueAccent)),
-                  hintText: 'write your note',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: Colors.lightBlueAccent),
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
+                  hintText: 'write your note title',
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.lightBlueAccent,
+                    ),
+                  ),
+                  fillColor: Colors.grey,
                 ),
               ),
               const SizedBox(
@@ -131,11 +107,13 @@ class _AddNoteState extends State<AddNote> {
                         response.statusCode == 200) {
                       Navigator.pop(context);
                     } else {
-                      throw Exception('Failed to create data: ' +
-                          response.statusCode.toString());
+                      print('Failed to create data: ${response.statusCode}');
                     }
                   },
-                  child: const Text('Create Note', style: TextStyle(color: Colors.white),))
+                  child: const Text(
+                    'Create Note',
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
         ));
