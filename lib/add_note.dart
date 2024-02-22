@@ -109,9 +109,16 @@ class _AddNoteState extends State<AddNote> {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
-              TextButton(
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Colors.lightBlueAccent,
+                    minimumSize: const Size(double.infinity, 60),
+                  ),
                   onPressed: () async {
                     final url = Uri.parse('http://127.0.0.1:8000/api/notes/');
                     final response = await http.post(url, body: {
@@ -128,7 +135,7 @@ class _AddNoteState extends State<AddNote> {
                           response.statusCode.toString());
                     }
                   },
-                  child: const Text('create note'))
+                  child: const Text('Create Note', style: TextStyle(color: Colors.white),))
             ],
           ),
         ));
