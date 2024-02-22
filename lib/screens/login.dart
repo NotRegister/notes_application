@@ -116,6 +116,12 @@ class _LoginState extends State<Login> {
               if (usernameController.text.isNotEmpty &&
                   passwordController.text.isNotEmpty) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter username and password'),
+                  ),
+                );
               }
             },
             child: const Text('Login', style: TextStyle(color: Colors.white),),

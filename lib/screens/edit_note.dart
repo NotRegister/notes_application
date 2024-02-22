@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
 
 class EditNote extends StatefulWidget {
-  const EditNote({super.key});
+  const EditNote({super.key, required int id, required String tag, required String note});
 
+  
   @override
   State<EditNote> createState() => _EditNoteState();
 }
 
 class _EditNoteState extends State<EditNote> {
-  
+  // final String tag;
+  final titleController = TextEditingController();
+  final noteController = TextEditingController();
+  String todayDate = DateFormat('yMd').format(DateTime.now());
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+  
+  
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -25,7 +40,7 @@ class _EditNoteState extends State<EditNote> {
             },
           ),
           title: const Text(
-            'Add Note',
+            'Edit Note',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.lightBlueAccent,
