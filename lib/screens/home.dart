@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
                                           TextButton(
-                                            onPressed: () async {
+                                            onPressed: () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(

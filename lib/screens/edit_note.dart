@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-
 class EditNote extends StatefulWidget {
-  const EditNote({super.key, required int id, required String tag, required String note});
-
+  final int id;
+  final String tag;
+  final String note;
   
+  const EditNote({super.key, required this.id, required this.tag, required this.note});
+
   @override
-  State<EditNote> createState() => _EditNoteState();
+  State<EditNote> createState() => _EditNoteState(id: id, tag: tag, note: note);
 }
 
 class _EditNoteState extends State<EditNote> {
+  _EditNoteState({required this.id, required this.tag, required this.note});
+  int id;
+  String tag;
+  String note;
+
   // final String tag;
   final titleController = TextEditingController();
   final noteController = TextEditingController();
@@ -24,10 +31,33 @@ class _EditNoteState extends State<EditNote> {
     super.dispose();
   }
 
+  Future<void> updateData() async {
+    if (id != null) {
+      tag = titleController.text;
+      note = noteController.text;
+      final url = Uri.parse('http://127.0.0.1:8000/api/$id');
+
+      final response = await http.post(Uri.parse('uri'), headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      }, body: <String, String>{
+        'tag': tag,
+        'note': note,
+        'username': '1',
+        'created_at': todayDate,
+      });
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        Navigator.pop(context);
+      } else {
+        print('Failed to create data: ${response.statusCode}');
+      }
+    } else {
+      print('id is null');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-  
-  
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -51,8 +81,7 @@ class _EditNoteState extends State<EditNote> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  padding:
-                      const EdgeInsetsDirectional.only(start: 5, bottom: 10),
+                  padding: const EdgeInsetsDirectional.only(start: 5, bottom: 10),
                   child: const Text(
                     'Notes Title',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -77,8 +106,7 @@ class _EditNoteState extends State<EditNote> {
                 height: 20,
               ),
               Container(
-                  padding:
-                      const EdgeInsetsDirectional.only(start: 5, bottom: 10),
+                  padding: const EdgeInsetsDirectional.only(start: 5, bottom: 10),
                   child: const Text(
                     'Notes Content',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -118,8 +146,7 @@ class _EditNoteState extends State<EditNote> {
                       'username': '1',
                       'created_at': todayDate,
                     });
-                    if (response.statusCode == 201 ||
-                        response.statusCode == 200) {
+                    if (response.statusCode == 201 || response.statusCode == 200) {
                       Navigator.pop(context);
                     } else {
                       print('Failed to create data: ${response.statusCode}');
