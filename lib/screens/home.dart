@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                               apiService
                                                   .deleteNote(_notesModel![index].id);
                                               setState(() {
-                                                // _getData();f
+                                                // _getData();
                                                 _notesModel!.removeAt(index);
                                               });
                                               // print('setstate error');

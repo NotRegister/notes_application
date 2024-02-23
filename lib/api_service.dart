@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:notes_application/constant.dart';
 import 'package:notes_application/notesModel.dart';
@@ -39,13 +40,4 @@ class ApiService {
               'id': 1,
             });
   }
-
-    //http put update
-/*   Future<void> updateNote(int id, String tag, String note) async {
-    Map<String,dynamic> request = [
-      'id' = "14", 
-
-    ]
-    
-  } */
 }
