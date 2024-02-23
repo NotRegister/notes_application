@@ -6,7 +6,7 @@ class EditNote extends StatefulWidget {
   final int id;
   final String tag;
   final String note;
-  
+
   const EditNote({super.key, required this.id, required this.tag, required this.note});
 
   @override
@@ -37,7 +37,7 @@ class _EditNoteState extends State<EditNote> {
       note = noteController.text;
       final url = Uri.parse('http://127.0.0.1:8000/api/$id');
 
-      final response = await http.post(Uri.parse('uri'), headers: <String, String>{
+      final response = await http.post(Uri.parse('http://127.0.0.1:8000/api/$id'), headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       }, body: <String, String>{
         'tag': tag,
