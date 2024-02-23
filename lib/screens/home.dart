@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/api_service.dart';
 import 'package:notes_application/screens/add_note.dart';
+import 'package:notes_application/screens/edit_note%20copy.dart';
 import 'package:notes_application/screens/edit_note.dart';
 
 class HomePage extends StatefulWidget {
@@ -111,11 +112,12 @@ class _HomePageState extends State<HomePage> {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) => EditNote(
+                                                      builder: (context) => EditNoteC(notesModel: _notesModel![index])
+                                                        /*  (context) => EditNote(
                                                             id: _notesModel![index].id,
                                                             tag: _notesModel![index].tag,
                                                             note:_notesModel![index].note,
-                                                          )));
+                                                          ) */));
                                             },
                                             child: const Icon(
                                               Icons.edit,

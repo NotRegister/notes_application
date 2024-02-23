@@ -27,17 +27,4 @@ class ApiService {
       throw Exception('Failed to delete note');
     }
   }
-
-  Future<void> postNote(String tag, String note) async {
-    final response =
-        await http.post(Uri.parse('http://127.0.0.1:8000/api/notes/'),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: <String, dynamic>{
-              'tag': 'Flutter HTTP CRUD',
-              'note': 'test api through Flutter',
-              'id': 1,
-            });
-  }
 }
