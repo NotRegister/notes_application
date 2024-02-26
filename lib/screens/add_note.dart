@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:notes_application/screens/home.dart';
 
 class AddNote extends StatefulWidget {
   const AddNote({super.key});
@@ -130,7 +131,7 @@ class _AddNoteState extends State<AddNote> {
                     });
                     if (response.statusCode == 201 ||
                         response.statusCode == 200) {
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()),);
                     } else {
                       print('Failed to create data: ${response.statusCode}');
                     }
