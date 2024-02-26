@@ -4,6 +4,7 @@ import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/api_service.dart';
 import 'package:notes_application/screens/add_note.dart';
 import 'package:notes_application/screens/edit_note%20copy.dart';
+import 'package:notes_application/screens/preview_note.dart';
 
 class HomePage extends StatefulWidget {
   final String loggedInUsername;
@@ -116,71 +117,81 @@ class _HomePageState extends State<HomePage> {
                     child: ListView.builder(
                         itemCount: _notesModel!.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: SingleChildScrollView(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width - 200,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PreviewNote(
+                                            notesModel: _notesModel![index],
+                                          )));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: SingleChildScrollView(
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width - 200,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                _notesModel![index].tag,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                _notesModel![index].note,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: const TextStyle(color: Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              _notesModel![index].tag,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => EditNoteC(
+                                                            notesModel:
+                                                                _notesModel![index])));
+                                              },
+                                              child: const Icon(
+                                                Icons.edit,
+                                                color: Colors.amber,
+                                              ),
                                             ),
-                                            Text(
-                                              _notesModel![index].note,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: const TextStyle(color: Colors.grey),
+                                            TextButton(
+                                              onPressed: () async {
+                                                var apiService = ApiService();
+                                                apiService
+                                                    .deleteNote(_notesModel![index].id);
+                                                setState(() {
+                                                  // _getData();
+                                                  _notesModel!.removeAt(index);
+                                                });
+                                                // print('setstate error');
+                                              },
+                                              child: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
                                             ),
                                           ],
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => EditNoteC(
-                                                          notesModel:
-                                                              _notesModel![index])));
-                                            },
-                                            child: const Icon(
-                                              Icons.edit,
-                                              color: Colors.amber,
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () async {
-                                              var apiService = ApiService();
-                                              apiService
-                                                  .deleteNote(_notesModel![index].id);
-                                              setState(() {
-                                                // _getData();
-                                                _notesModel!.removeAt(index);
-                                              });
-                                              // print('setstate error');
-                                            },
-                                            child: const Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
