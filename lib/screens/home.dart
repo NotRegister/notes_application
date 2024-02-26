@@ -4,21 +4,49 @@ import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/api_service.dart';
 import 'package:notes_application/screens/add_note.dart';
 import 'package:notes_application/screens/edit_note%20copy.dart';
-import 'package:notes_application/screens/edit_note.dart';
+import 'package:notes_application/screens/preview_note.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String loggedInUsername;
+  const HomePage({super.key, this.loggedInUsername = ''});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(this.loggedInUsername);
 }
 
 class _HomePageState extends State<HomePage> {
   late List<NotesModel>? _notesModel = [];
+  final String loggedInUsername;
+  _HomePageState(this.loggedInUsername);
 
   void _getData() async {
-    _notesModel = (await ApiService().getNotes())!;
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+    /* try {
+      List<NotesModel>? allNotes = await ApiService().getNotes(loggedInUsername);
+    if (allNotes != null) {
+      _notesModel = allNotes.where((note) => note.username == loggedInUsername).toList();
+      setState(() {});} else {
+      print('notesModel is null ');
+      }
+    } catch (e) {
+      print('error: $e');
+    } */
+
+    _notesModel = await ApiService().getNotes(loggedInUsername);
+    if (_notesModel != null) {
+      // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+      setState(() {});
+      // print(loggedInUsername);
+    } else {
+      print('notesModel is null ');
+    }
+
+    // List<NotesModel>? fullNotes = await ApiService().getNotes();
+    /* _notesModel = await fullNotes!
+        .where((element) => element.username == loggedInUsername)
+        .toList();
+        // print(loggedInUsername); //! loggedInUsername terbaca 
+    setState(() {});*/
+    // _notesModel = await ApiService().getNotes();
   }
 
   @override
@@ -46,7 +74,10 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddNote()),
+            MaterialPageRoute(
+                builder: (context) => AddNote(
+                      loggedInUsername: loggedInUsername,
+                    )),
           ),
           backgroundColor: Colors.lightBlueAccent,
           child: const Icon(
@@ -56,16 +87,27 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: _notesModel == null || _notesModel!.isEmpty
-            ? const Center(
-                child: CircularProgressIndicator(),
+            ? AlertDialog(
+                title: Text('Alert'),
+                content: Text('You don\'t have any notes'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Back'),
+                  ),
+                ],
               )
+            /* const Center(
+                child: CircularProgressIndicator(),
+              ) */
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 0, top: 0, bottom: 0),
-                    child: Text('You\nHave\n${_notesModel!.length} Notes',
-                        style: GoogleFonts.poppins(color: Colors.black87, fontSize: 55)),
+                    child: Text(
+                        'Hello $loggedInUsername\nYou Have\n${_notesModel!.length} Notes',
+                        style: GoogleFonts.poppins(color: Colors.black87, fontSize: 45)),
                   ),
                   const SizedBox(
                     height: 20,
@@ -75,74 +117,81 @@ class _HomePageState extends State<HomePage> {
                     child: ListView.builder(
                         itemCount: _notesModel!.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: SingleChildScrollView(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width - 200,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PreviewNote(
+                                            notesModel: _notesModel![index],
+                                          )));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: SingleChildScrollView(
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width - 200,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                _notesModel![index].tag,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                _notesModel![index].note,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: const TextStyle(color: Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              _notesModel![index].tag,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => EditNoteC(
+                                                            notesModel:
+                                                                _notesModel![index])));
+                                              },
+                                              child: const Icon(
+                                                Icons.edit,
+                                                color: Colors.amber,
+                                              ),
                                             ),
-                                            Text(
-                                              _notesModel![index].note,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: const TextStyle(color: Colors.grey),
+                                            TextButton(
+                                              onPressed: () async {
+                                                var apiService = ApiService();
+                                                apiService
+                                                    .deleteNote(_notesModel![index].id);
+                                                setState(() {
+                                                  // _getData();
+                                                  _notesModel!.removeAt(index);
+                                                });
+                                                // print('setstate error');
+                                              },
+                                              child: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
                                             ),
                                           ],
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => EditNoteC(notesModel: _notesModel![index])
-                                                        /*  (context) => EditNote(
-                                                            id: _notesModel![index].id,
-                                                            tag: _notesModel![index].tag,
-                                                            note:_notesModel![index].note,
-                                                          ) */));
-                                            },
-                                            child: const Icon(
-                                              Icons.edit,
-                                              color: Colors.amber,
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () async {
-                                              var apiService = ApiService();
-                                              apiService
-                                                  .deleteNote(_notesModel![index].id);
-                                              setState(() {
-                                                // _getData();
-                                                _notesModel!.removeAt(index);
-                                              });
-                                              // print('setstate error');
-                                            },
-                                            child: const Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

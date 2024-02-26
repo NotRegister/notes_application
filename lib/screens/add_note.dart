@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/screens/home.dart';
 
 class AddNote extends StatefulWidget {
-  const AddNote({super.key});
+  // final NotesModel notesModel;
+  final String loggedInUsername;
+  const AddNote({super.key, required this.loggedInUsername});
 
   @override
-  State<AddNote> createState() => _AddNoteState();
+  State<AddNote> createState() => _AddNoteState(this.loggedInUsername);
 }
 
 class _AddNoteState extends State<AddNote> {
-  /* @override
-  //! this method success to post data to the server
-  Future<void> postData() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/notes/');
-    final response = await http.post(url, body: {
-      
-      'tag': 'Flutter HTTP CRUD',
-      'note': 'test api through Flutter',
-      'username': '2',
-      'created_at': '2022-01-01T00:00:00Z',
-    });
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      print('success');
-    } else {
-      throw Exception(
-          'Failed to create data: ' + response.statusCode.toString());
-    }
-  } */
+  final String loggedInUsername;
+  _AddNoteState(this.loggedInUsername);
 
   final titleController = TextEditingController();
   final noteController = TextEditingController();
@@ -41,7 +28,6 @@ class _AddNoteState extends State<AddNote> {
     super.dispose();
   }
 
-  
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -66,8 +52,7 @@ class _AddNoteState extends State<AddNote> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  padding:
-                      const EdgeInsetsDirectional.only(start: 5, bottom: 10),
+                  padding: const EdgeInsetsDirectional.only(start: 5, bottom: 10),
                   child: const Text(
                     'Notes Title',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -81,7 +66,9 @@ class _AddNoteState extends State<AddNote> {
                   hintText: 'write your note title',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, ), 
+                    borderSide: const BorderSide(
+                      color: Colors.lightBlueAccent,
+                    ),
                   ),
                   fillColor: Colors.grey,
                 ),
@@ -90,8 +77,7 @@ class _AddNoteState extends State<AddNote> {
                 height: 20,
               ),
               Container(
-                  padding:
-                      const EdgeInsetsDirectional.only(start: 5, bottom: 10),
+                  padding: const EdgeInsetsDirectional.only(start: 5, bottom: 10),
                   child: const Text(
                     'Notes Content',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -105,7 +91,9 @@ class _AddNoteState extends State<AddNote> {
                   hintText: 'write your note title',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, ), 
+                    borderSide: const BorderSide(
+                      color: Colors.lightBlueAccent,
+                    ),
                   ),
                   fillColor: Colors.grey,
                 ),
@@ -126,17 +114,22 @@ class _AddNoteState extends State<AddNote> {
                     final response = await http.post(url, body: {
                       'tag': titleController.text,
                       'note': noteController.text,
-                      'username': '1',
-                      'created_at': todayDate,
+                      'username': loggedInUsername,
+                      // 'created_at': todayDate,
                     });
-                    if (response.statusCode == 201 ||
-                        response.statusCode == 200) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()),);
+                    if (response.statusCode == 201 || response.statusCode == 200) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: loggedInUsername,)),
+                      );
                     } else {
                       print('Failed to create data: ${response.statusCode}');
                     }
                   },
-                  child: const Text('Create Note', style: TextStyle(color: Colors.white),))
+                  child: const Text(
+                    'Create Note',
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
         ));
