@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notes_application/screens/home.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
           const SizedBox(
             height: 20,
           ),
-          Container(
+          /* Container(
               padding: const EdgeInsetsDirectional.only(start: 5, bottom: 10),
               child: const Text(
                 'Password',
@@ -99,10 +99,10 @@ class _LoginState extends State<Login> {
               ),
               fillColor: Colors.grey,
             ),
-          ),
+          ), 
           const SizedBox(
             height: 20,
-          ),
+          ),*/
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -113,9 +113,8 @@ class _LoginState extends State<Login> {
             ),
             onPressed: () {
               // Validate returns true if the form is valid, or false otherwise.
-              if (usernameController.text.isNotEmpty &&
-                  passwordController.text.isNotEmpty) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),));
+              if (usernameController.text.isNotEmpty) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: usernameController.text),));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

@@ -4,21 +4,49 @@ import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/api_service.dart';
 import 'package:notes_application/screens/add_note.dart';
 import 'package:notes_application/screens/edit_note%20copy.dart';
-import 'package:notes_application/screens/edit_note.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String loggedInUsername;
+  const HomePage({super.key, required this.loggedInUsername});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(this.loggedInUsername);
 }
 
 class _HomePageState extends State<HomePage> {
   late List<NotesModel>? _notesModel = [];
+  final String loggedInUsername;
+  _HomePageState(this.loggedInUsername);
 
   void _getData() async {
-    _notesModel = (await ApiService().getNotes())!;
+    /* try {
+      List<NotesModel>? allNotes = await ApiService().getNotes(loggedInUsername);
+    if (allNotes != null) {
+      _notesModel = allNotes.where((note) => note.username == loggedInUsername).toList();
+      setState(() {});} else {
+      print('notesModel is null ');
+      }
+    } catch (e) {
+      print('error: $e');
+    } */
+    
+    _notesModel = await ApiService().getNotes(loggedInUsername);
+    if (_notesModel != null) {
+      setState(() {});
+      print(loggedInUsername);
+    } else {
+      print('notesModel is null ');
+    }
     Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+    
+    
+    // List<NotesModel>? fullNotes = await ApiService().getNotes();
+    /* _notesModel = await fullNotes!
+        .where((element) => element.username == loggedInUsername)
+        .toList();
+        // print(loggedInUsername); //! loggedInUsername terbaca 
+    setState(() {});*/
+    // _notesModel = await ApiService().getNotes();
   }
 
   @override
@@ -43,17 +71,17 @@ class _HomePageState extends State<HomePage> {
           ), 
           backgroundColor: Colors.lightBlueAccent,
         ),*/
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNote()),
-          ),
-          backgroundColor: Colors.lightBlueAccent,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () => Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const AddNote(notesModel: _notesModel.username,)),
+        //   ),
+        //   backgroundColor: Colors.lightBlueAccent,
+        //   child: const Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //   ),
+        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: _notesModel == null || _notesModel!.isEmpty
             ? const Center(
@@ -112,12 +140,9 @@ class _HomePageState extends State<HomePage> {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) => EditNoteC(notesModel: _notesModel![index])
-                                                        /*  (context) => EditNote(
-                                                            id: _notesModel![index].id,
-                                                            tag: _notesModel![index].tag,
-                                                            note:_notesModel![index].note,
-                                                          ) */));
+                                                      builder: (context) => EditNoteC(
+                                                          notesModel:
+                                                              _notesModel![index])));
                                             },
                                             child: const Icon(
                                               Icons.edit,

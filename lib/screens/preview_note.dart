@@ -13,7 +13,7 @@ class _PreviewNoteState extends State<PreviewNote> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
+          /* leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.white,
@@ -22,7 +22,7 @@ class _PreviewNoteState extends State<PreviewNote> {
               // Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
             },
-          ),
+          ), */
           title: const Text(
             'Preview Note',
             style: TextStyle(color: Colors.white),

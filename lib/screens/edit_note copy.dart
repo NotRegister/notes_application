@@ -118,9 +118,6 @@ class _EditNoteState extends State<EditNoteC> {
                       Uri.parse('http://127.0.0.1:8000/api/notes/${notesModel.id}');
                   final response = await http.post(
                     url,
-                    // headers: <String, String>{
-                    //   'Content-Type': 'application/json; charset=UTF-8',
-                    // },
                     body: {
                       'tag': titleController.text,
                       'note': noteController.text,
@@ -130,12 +127,13 @@ class _EditNoteState extends State<EditNoteC> {
                   if (response.statusCode == 200) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                loggedInUsername: notesModel.username,
+                              )),
                     );
                   } else {
                     print('Failed to update data: ${response.statusCode}');
-                    // Print the response body for more information if needed
-                    print('Response Body: ${response.body}');
                   }
                 } catch (e) {
                   print('Error: $e');
