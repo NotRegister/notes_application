@@ -32,12 +32,12 @@ class _HomePageState extends State<HomePage> {
     
     _notesModel = await ApiService().getNotes(loggedInUsername);
     if (_notesModel != null) {
-      setState(() {});
-      print(loggedInUsername);
+    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+      // setState(() {});
+      // print(loggedInUsername);
     } else {
       print('notesModel is null ');
     }
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
     
     
     // List<NotesModel>? fullNotes = await ApiService().getNotes();
@@ -71,17 +71,17 @@ class _HomePageState extends State<HomePage> {
           ), 
           backgroundColor: Colors.lightBlueAccent,
         ),*/
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => Navigator.push(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => const AddNote(notesModel: _notesModel.username,)),
-        //   ),
-        //   backgroundColor: Colors.lightBlueAccent,
-        //   child: const Icon(
-        //     Icons.add,
-        //     color: Colors.white,
-        //   ),
-        // ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddNote(notesModel: ,)),
+          ),
+          backgroundColor: Colors.lightBlueAccent,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: _notesModel == null || _notesModel!.isEmpty
             ? const Center(
@@ -92,8 +92,8 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 0, top: 0, bottom: 0),
-                    child: Text('You\nHave\n${_notesModel!.length} Notes',
-                        style: GoogleFonts.poppins(color: Colors.black87, fontSize: 55)),
+                    child: Text('Hello $loggedInUsername\nYou Have\n${_notesModel!.length} Notes',
+                        style: GoogleFonts.poppins(color: Colors.black87, fontSize: 45)),
                   ),
                   const SizedBox(
                     height: 20,
