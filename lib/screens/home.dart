@@ -7,7 +7,7 @@ import 'package:notes_application/screens/edit_note%20copy.dart';
 
 class HomePage extends StatefulWidget {
   final String loggedInUsername;
-  const HomePage({super.key, required this.loggedInUsername});
+  const HomePage({super.key, this.loggedInUsername = ''});
 
   @override
   State<HomePage> createState() => _HomePageState(this.loggedInUsername);
@@ -29,17 +29,16 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('error: $e');
     } */
-    
+
     _notesModel = await ApiService().getNotes(loggedInUsername);
     if (_notesModel != null) {
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-      // setState(() {});
+      // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+      setState(() {});
       // print(loggedInUsername);
     } else {
       print('notesModel is null ');
     }
-    
-    
+
     // List<NotesModel>? fullNotes = await ApiService().getNotes();
     /* _notesModel = await fullNotes!
         .where((element) => element.username == loggedInUsername)
@@ -74,7 +73,10 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddNote(notesModel: ,)),
+            MaterialPageRoute(
+                builder: (context) => AddNote(
+                      loggedInUsername: loggedInUsername,
+                    )),
           ),
           backgroundColor: Colors.lightBlueAccent,
           child: const Icon(
@@ -84,15 +86,26 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: _notesModel == null || _notesModel!.isEmpty
-            ? const Center(
-                child: CircularProgressIndicator(),
+            ? AlertDialog(
+                title: Text('Alert'),
+                content: Text('You don\'t have any notes'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Back'),
+                  ),
+                ],
               )
+            /* const Center(
+                child: CircularProgressIndicator(),
+              ) */
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 0, top: 0, bottom: 0),
-                    child: Text('Hello $loggedInUsername\nYou Have\n${_notesModel!.length} Notes',
+                    child: Text(
+                        'Hello $loggedInUsername\nYou Have\n${_notesModel!.length} Notes',
                         style: GoogleFonts.poppins(color: Colors.black87, fontSize: 45)),
                   ),
                   const SizedBox(

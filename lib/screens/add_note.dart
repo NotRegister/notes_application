@@ -5,16 +5,17 @@ import 'package:notes_application/notesModel.dart';
 import 'package:notes_application/screens/home.dart';
 
 class AddNote extends StatefulWidget {
-  final NotesModel notesModel ;
-  const AddNote({super.key, required this.notesModel});
+  // final NotesModel notesModel;
+  final String loggedInUsername;
+  const AddNote({super.key, required this.loggedInUsername});
 
   @override
-  State<AddNote> createState() => _AddNoteState(this.notesModel);
+  State<AddNote> createState() => _AddNoteState(this.loggedInUsername);
 }
 
 class _AddNoteState extends State<AddNote> {
-  final NotesModel notesModel;
-  _AddNoteState(this.notesModel);
+  final String loggedInUsername;
+  _AddNoteState(this.loggedInUsername);
 
   final titleController = TextEditingController();
   final noteController = TextEditingController();
@@ -113,16 +114,13 @@ class _AddNoteState extends State<AddNote> {
                     final response = await http.post(url, body: {
                       'tag': titleController.text,
                       'note': noteController.text,
-                      // 'username': '1',
+                      'username': loggedInUsername,
                       // 'created_at': todayDate,
                     });
                     if (response.statusCode == 201 || response.statusCode == 200) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => HomePage(
-                                  loggedInUsername: notesModel.username,
-                                )),
+                        MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: loggedInUsername,)),
                       );
                     } else {
                       print('Failed to create data: ${response.statusCode}');

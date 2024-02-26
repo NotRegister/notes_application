@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter username and password'),
+                    content: Text('Please enter your username'),
                   ),
                 );
               }
